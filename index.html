@@ -877,6 +877,35 @@
             color: #cdcaa8;
         }
 
+        /* --- CLIPS TAB STYLE --- */
+        .clip-embed-container iframe,
+        .clip-embed-container video {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            border: none;
+            object-fit: contain; /* 'contain' sorgt dafür, dass das ganze Video ohne Abschneiden in die Box passt */
+            outline: none;
+            background: #1a1916;
+            display: block;
+        }
+
+        .clip-embed-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .clip-notice {
+            font-size: 0.65rem;
+            color: rgba(78, 75, 66, 0.7);
+            text-align: center;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
     </style>
 </head>
 <body>
@@ -902,6 +931,7 @@
                 <button class="tab-btn active" onclick="switchTab('profile', this)">Profile</button>
                 <button class="tab-btn" onclick="switchTab('games', this)">Games</button>
                 <button class="tab-btn" onclick="switchTab('socials', this)">Game Socials</button>
+                <button class="tab-btn" onclick="switchTab('clips', this)">My Clips</button>
                 <button class="tab-btn" onclick="switchTab('waifu', this)">Waifu Corner</button>
                 <button class="tab-btn" onclick="switchTab('activity', this)">Discord Activity</button>
                 <button class="tab-btn" onclick="switchTab('specs', this)">PC Specs</button>
@@ -1288,6 +1318,29 @@
                         </div>
                         <div class="contact-value">asukaa@gmx.net</div>
                     </a>
+                </div>
+            </div> <div id="clips-tab" class="tab-content">
+                <h2 class="socials-headline">Combat Records & Clips</h2>
+                
+                <div class="contact-list">
+                    <a href="https://medal.tv/u/iasukaai" target="_blank" class="contact-item">
+                        <div class="contact-label">
+                            <i class="fa-solid fa-video"></i>
+                            Medal.tv Profile
+                        </div>
+                        <div class="contact-value">[ visit archive ]</div>
+                    </a>
+                </div>
+
+                <div class="clip-embed-container">
+                    <video controls muted>
+                        <source src="assets/Clips/clip.mp4" type="video/mp4">
+                        System-Error: Videoformat not Supported
+                    </video>
+                </div>
+                
+                <div class="clip-notice">
+                    System Notice: Manual update required for latest record transmission.
                 </div>
             </div>
 
