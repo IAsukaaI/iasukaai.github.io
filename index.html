@@ -876,6 +876,9 @@
             color: #cdcaa8;
         }
 
+        /* Portfolio */
+        .live-value { font-family: monospace; font-size: 0.9rem; font-weight: bold; color: #8c9c61; }
+
     </style>
 </head>
 <body>
@@ -899,6 +902,7 @@
             
             <div class="nier-tabs">
                 <button class="tab-btn active" onclick="switchTab('profile', this)">Profile</button>
+                <button class="tab-btn" onclick="switchTab('portfolio', this)">Portfolio</button>
                 <button class="tab-btn" onclick="switchTab('games', this)">Games</button>
                 <button class="tab-btn" onclick="switchTab('socials', this)">Game Socials</button>
                 <button class="tab-btn" onclick="switchTab('waifu', this)">Waifu Corner</button>
@@ -933,6 +937,34 @@
                     </div>
                     <div class="location" id="localTime" style="margin-top: 8px;">
                         <i class="fa-solid fa-clock"></i> LOCAL TIME: --:--
+                    </div>
+                </div>
+            </div>
+
+            <div id="portfolio-tab" class="tab-content">
+                <h2 class="socials-headline">Portfolio Archive</h2>
+                <div class="socials-list">
+                    <div class="socials-item">
+                        <span class="socials-platform"><i class="fa-solid fa-heart-pulse"></i> Years Alive</span>
+                        <span class="socials-uid live-value" id="years-alive-counter">18 Years</span>
+                    </div>
+                    <div class="socials-item">
+                        <span class="socials-platform"><i class="fa-solid fa-laptop-code"></i> Coding Experience</span>
+                        <span class="socials-uid live-value" id="coding-exp-counter">2 Years</span>
+                    </div>
+                    <div class="socials-item">
+                        <span class="socials-platform"><i class="fa-solid fa-crosshairs"></i> Valorant Playtime</span>
+                        <span class="socials-uid">
+                            769 Hours 
+                            <a href="https://tracker.gg/valorant/profile/riot/Asukaa%23ASU02/performance?platform=pc&playlist=competitive" target="_blank" style="margin-left: 5px; color: #cdcaa8; background: #4e4b42; padding: 2px 6px; text-decoration: none; font-size: 0.7rem; border-radius: 2px;">Profile</a>
+                        </span>
+                    </div>
+                    <div class="socials-item">
+                        <span class="socials-platform"><i class="fa-brands fa-steam"></i> Steam Playtime</span>
+                        <span class="socials-uid">
+                            4,175 Hours 
+                            <a href="https://steamtime.info/s/IAsukaaI" target="_blank" style="margin-left: 5px; color: #cdcaa8; background: #4e4b42; padding: 2px 6px; text-decoration: none; font-size: 0.7rem; border-radius: 2px;">Profile</a>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -1326,14 +1358,14 @@
         </div>
     </div>
   
-<div class="copyright-disclaimer">
-    © 2026 ASUKAA // YoRHa PERSONAL NETWORK — ALL RIGHTS RESERVED
-    <br>
-</div>
+    <div class="copyright-disclaimer">
+        © 2026 ASUKAA // YoRHa PERSONAL NETWORK — ALL RIGHTS RESERVED
+        <br>
+    </div>
 
-  <audio id="bgMusic" loop>
-      <source src="https://files.catbox.moe/1twzuu.mp3" type="audio/mpeg">
-  </audio>
+    <audio id="bgMusic" loop>
+        <source src="https://files.catbox.moe/1twzuu.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         const audio = document.getElementById('bgMusic');
@@ -1444,6 +1476,7 @@
             }
         }
 
+        /* --- DISCORD STATUS FETCH --- */
         const DISCORD_ID = "818168096006996008";
 
         async function fetchDiscordStatus() {
@@ -1471,7 +1504,10 @@
                     
                     if (discordAvatar) {
                         if (user.avatar) {
-                            discordAvatar.src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${user.avatar}.png?size=128`;
+                            const isAnimated = user.avatar.startsWith('a_');
+                            const extension = isAnimated ? 'gif' : 'png';
+
+                            discordAvatar.src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${user.avatar}.${extension}`;
                         } else {
                             discordAvatar.src = "https://cdn.discordapp.com/embed/avatars/0.png";
                         }
@@ -1548,6 +1584,23 @@
         }
 
         setInterval(fetchDiscordStatus, 15000);
+
+            function updateAgeCounter() {
+                const counterElement = document.getElementById('years-alive-counter');
+                if (!counterElement) return;
+
+                const birthDate = new Date(2007, 6, 25); 
+                const now = new Date();
+               
+                const diff = now - birthDate;
+    
+                const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+    
+                counterElement.innerText = years;
+            }
+
+            updateAgeCounter();
+
     </script>
 </body>
 </html>
