@@ -751,9 +751,14 @@
         <div class="nier-bar"></div>
     </div>
 
-    <video id="bgVideo" class="background-container" loop playsinline>
-        <source src="https://files.catbox.moe/wl3q9q.mp4" type="video/mp4">
+    <video id="bgVideo" class="background-container" loop playsinline muted>
+        <source src="https://files.catbox.moe/zc9nzd.mp4" type="video/mp4">
     </video>
+    
+    <audio id="bgAudio" loop>
+        <source src="https://files.catbox.moe/1jc0ya.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="bg-overlay"></div>
 
     <a href="https://asukaa.de/old" class="old-site-btn">
@@ -785,7 +790,7 @@
 
             <div id="profile-tab" class="tab-content active">
                 <div class="avatar-container">
-                    <img src="assets/Profile Picture/pfp.jpg" alt="Profile Avatar" class="avatar">
+                    <img src="assets/Profile Picture/pfp.png" alt="Profile Avatar" class="avatar">
                 </div>
 
                 <h1 class="username">Asukaa</h1>
@@ -948,7 +953,7 @@
                 </div>
             </div>
 
-                   <div id="waifu-tab" class="tab-content">
+            <div id="waifu-tab" class="tab-content">
                 <h2 class="waifu-headline">Asukaa's Waifu Ranking</h2>
                 <div class="waifu-list">
                     <div class="waifu-card">
@@ -1240,12 +1245,13 @@
 
     <script>
         const bgVideo = document.getElementById('bgVideo');
+        const bgAudio = document.getElementById('bgAudio');
         const volumeIcon = document.getElementById('volumeIcon');
         const volumeSlider = document.getElementById('volumeSlider');
         const profileCard = document.getElementById('profileCard');
         const introOverlay = document.getElementById('intro-overlay');
         
-        bgVideo.volume = 0.25;
+        bgAudio.volume = 0.25;
 
         function updateLocalTime() {
             const timeElement = document.getElementById('localTime');
@@ -1266,26 +1272,29 @@
                 introOverlay.remove();
                 profileCard.classList.add('active');
             }, 600);
-            try { bgVideo.play(); } catch(err) { console.log(err); }
+            try { 
+                bgVideo.play(); 
+                bgAudio.play();
+            } catch(err) { console.log(err); }
             fetchDiscordStatus();
         }
 
         function toggleAudio() {
-            if (bgVideo.muted || bgVideo.volume === 0) {
-                bgVideo.muted = false;
-                if(bgVideo.volume === 0) bgVideo.volume = 0.25;
-                volumeSlider.value = bgVideo.volume;
-                bgVideo.play();
+            if (bgAudio.muted || bgAudio.volume === 0) {
+                bgAudio.muted = false;
+                if(bgAudio.volume === 0) bgAudio.volume = 0.25;
+                volumeSlider.value = bgAudio.volume;
+                bgAudio.play();
                 volumeIcon.className = "fa-solid fa-volume-high";
             } else {
-                bgVideo.muted = true;
+                bgAudio.muted = true;
                 volumeIcon.className = "fa-solid fa-volume-xmark";
             }
         }
 
         function setVolume(val) {
-            bgVideo.volume = val;
-            bgVideo.muted = (val == 0);
+            bgAudio.volume = val;
+            bgAudio.muted = (val == 0);
             volumeIcon.className = (val == 0) ? "fa-solid fa-volume-xmark" : (val < 0.5 ? "fa-solid fa-volume-low" : "fa-solid fa-volume-high");
         }
 
