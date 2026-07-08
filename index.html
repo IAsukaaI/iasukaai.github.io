@@ -936,6 +936,7 @@
                 <button class="tab-btn" onclick="switchTab('developer', this)">Developer Corner</button>
                 <button class="tab-btn" onclick="switchTab('achievements', this)">Achievements</button>
                 <button class="tab-btn" onclick="switchTab('contact', this)">Contact</button>
+                <button class="tab-btn" onclick="switchTab('discord', this)">Discord Server</button>
             </div>
 
             <div id="profile-tab" class="tab-content active">
@@ -1108,7 +1109,7 @@
                 <div class="waifu-list">
                     <div class="waifu-card">
                         <div class="waifu-img-container"><img src="assets/Waifus/yuno.jpg" class="waifu-img" alt="Asuka"></div>
-                        <div class="waifu-info"><div class="waifu-name">Current Main Waifu | Yuno Gasai</div><div class="waifu-origin">Mirai Nikki / Future Diary (2011)</div></div>
+                        <div class="waifu-info"><div class="waifu-name">Current Main Waifu | Yuno Gasai</div><div class="waifu-origin">Mirai Nikki / Future Diarys (2011)</div></div>
                     </div>
                     <div class="waifu-card">
                         <div class="waifu-img-container"><img src="assets/Waifus/asuka.jpg" class="waifu-img" alt="Asuka"></div>
@@ -1365,6 +1366,27 @@
                 </div>
             </div>
 
+            <!-- NEUER DISCORD SERVER TAB CONTENT -->
+            <div id="discord-tab" class="tab-content">
+                <h2 class="socials-headline">Mirai Nikki Fan Server</h2>
+                <div class="bio-text" style="text-align: left; margin-bottom: 20px;">
+                    Mirai Nikki Fan Server. Find other Peopole who like to discuss Mirai Nikki. Join us and Chat with other Mirai Nikki Fans who watched The Anime or Read the Manga or Ask if the Anime is worth Watching in our Spoiler free Channels. We hope to see you Around~
+                    <br><br>
+                    <span style="color: var(--primary-light); font-style: italic;">
+                        "-Can't you see they're trying to trick you? Your Random Diary doesn't tell you what's actually going to happen to you Yuki! My Diary tells me everything. They're only using you! ~Yuno Gasai"
+                    </span>
+                </div>
+                
+                <div class="contact-list">
+                    <a href="https://discord.gg/VaWPQnzJdz" target="_blank" class="contact-item" style="justify-content: center; padding: 15px;">
+                        <div class="contact-label" style="font-size: 1.1rem; gap: 12px;">
+                            <i class="fab fa-discord" style="font-size: 1.4rem;"></i>
+                            Click to Join my Server
+                        </div>
+                    </a>
+                </div>
+            </div>
+
             <div class="social-icons-row">
                 <a href="https://medal.tv/u/iasukaai" target="_blank" class="social-icon-btn" title="Medal.tv"><i class="fa-solid fa-video"></i></a>
                 <a href="https://steamcommunity.com/id/iasukaai" target="_blank" class="social-icon-btn" title="Steam"><i class="fab fa-steam"></i></a>
@@ -1408,7 +1430,7 @@
         const playlist = [
             {
                 title: "To Surpass the Fear of Murder - Mirai Nikki OST - VOLUME 1 - TRACK 8",
-                cover: "assets/Albums/OST.png",
+                cover: "assets/albums/OST.png",
                 src: "https://files.catbox.moe/bvsdm9.mp3",
                 spotify: "https://www.youtube.com/watch?v=lABYa1LoePM" 
             },
