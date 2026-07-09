@@ -60,7 +60,61 @@
             align-items: center;
             z-index: 10000;
             cursor: pointer;
+            overflow: hidden;
+            isolation: isolate;
+            --click-x: 50%;
+            --click-y: 50%;
             transition: opacity 0.6s cubic-bezier(0.55, 0.085, 0.68, 0.53), visibility 0.6s;
+        }
+
+        #intro-overlay::before {
+            content: "";
+            position: absolute;
+            inset: -20%;
+            background:
+                linear-gradient(100deg, transparent 35%, rgba(255, 105, 180, 0.16) 50%, transparent 65%),
+                repeating-linear-gradient(
+                    to bottom,
+                    rgba(255, 255, 255, 0.06) 0 1px,
+                    transparent 1px 6px
+                );
+            opacity: 0.25;
+            transform: translateY(-12%);
+            animation: introScan 4s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #intro-overlay::after {
+            content: "";
+            position: absolute;
+            left: var(--click-x);
+            top: var(--click-y);
+            width: 26vmax;
+            height: 26vmax;
+            border: 2px solid rgba(255, 182, 193, 0.9);
+            border-radius: 50%;
+            box-shadow:
+                0 0 45px rgba(255, 105, 180, 0.75),
+                inset 0 0 45px rgba(255, 105, 180, 0.35);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #intro-overlay.entering {
+            pointer-events: none;
+            animation: introVanish 1.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        #intro-overlay.entering::before {
+            animation: introScanBreak 0.8s steps(8, end) forwards;
+            opacity: 0.7;
+        }
+
+        #intro-overlay.entering::after {
+            animation: introShockwave 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         #intro-text {
@@ -72,6 +126,35 @@
             margin-bottom: 10px;
             pointer-events: none;
             text-shadow: 0 0 15px var(--primary-pink);
+            position: relative;
+            z-index: 2;
+        }
+
+        #intro-text::before,
+        #intro-text::after {
+            content: attr(data-text);
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #intro-overlay.entering #intro-text {
+            animation: deadEndGlitch 0.85s steps(2, end) forwards;
+        }
+
+        #intro-overlay.entering #intro-text::before {
+            color: #fff;
+            text-shadow: -2px 0 #00f0ff, 0 0 18px rgba(0, 240, 255, 0.8);
+            clip-path: inset(0 0 48% 0);
+            animation: glitchSliceTop 0.55s steps(2, end) 3;
+        }
+
+        #intro-overlay.entering #intro-text::after {
+            color: var(--primary-light);
+            text-shadow: 2px 0 #ff2aa8, 0 0 18px rgba(255, 42, 168, 0.8);
+            clip-path: inset(52% 0 0 0);
+            animation: glitchSliceBottom 0.55s steps(2, end) 3;
         }
 
         .nier-bar {
@@ -82,11 +165,319 @@
             box-shadow: 0 0 10px var(--primary-pink);
             animation: expand 1.5s infinite ease-in-out;
             pointer-events: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        #intro-overlay.entering .nier-bar {
+            animation: barOverload 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .intro-fragment {
+            position: absolute;
+            left: var(--x);
+            top: var(--y);
+            width: var(--w);
+            height: 2px;
+            background: var(--primary-pink);
+            border-radius: 999px;
+            box-shadow: 0 0 12px rgba(255, 105, 180, 0.95);
+            opacity: 0.95;
+            transform: translate(-50%, -50%) rotate(var(--angle));
+            pointer-events: none;
+            z-index: 6;
+            animation: fragmentScatter 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .intro-crack {
+            position: absolute;
+            left: var(--x);
+            top: var(--y);
+            width: var(--length);
+            height: var(--thickness, 1px);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.95), rgba(255, 182, 193, 0.8), transparent);
+            box-shadow:
+                0 0 5px rgba(255, 255, 255, 0.85),
+                0 0 13px rgba(255, 105, 180, 0.6);
+            opacity: 0;
+            transform: rotate(var(--angle)) scaleX(0);
+            transform-origin: left center;
+            pointer-events: none;
+            z-index: 7;
+            animation: crackDraw 0.52s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .intro-crack::after {
+            content: "";
+            position: absolute;
+            right: 12%;
+            top: 0;
+            width: var(--branch-length);
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), transparent);
+            box-shadow: 0 0 8px rgba(255, 182, 193, 0.6);
+            transform: rotate(var(--branch-angle));
+            transform-origin: left center;
+        }
+
+        .intro-glass-shard {
+            position: absolute;
+            left: var(--x);
+            top: var(--y);
+            width: var(--size);
+            height: var(--size);
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.36), rgba(255, 105, 180, 0.12) 44%, rgba(0, 240, 255, 0.1)),
+                rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow:
+                inset 0 0 18px rgba(255, 255, 255, 0.14),
+                0 0 16px rgba(255, 105, 180, 0.36);
+            clip-path: polygon(var(--shape));
+            opacity: 0.88;
+            transform: translate(-50%, -50%) rotate(var(--angle)) scale(0.2);
+            transform-origin: center;
+            pointer-events: none;
+            z-index: 8;
+            animation: glassShardBreak 1.05s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .intro-screen-shard {
+            position: absolute;
+            left: var(--left);
+            top: var(--top);
+            width: var(--w);
+            height: var(--h);
+            background:
+                linear-gradient(145deg, rgba(255, 255, 255, 0.28), rgba(255, 105, 180, 0.12) 38%, rgba(18, 5, 14, 0.72)),
+                repeating-linear-gradient(
+                    to bottom,
+                    rgba(255, 255, 255, 0.07) 0 1px,
+                    transparent 1px 7px
+                );
+            border: 1px solid rgba(255, 255, 255, 0.58);
+            box-shadow:
+                inset 0 0 42px rgba(255, 255, 255, 0.12),
+                inset 0 0 70px rgba(255, 105, 180, 0.18),
+                0 0 34px rgba(255, 105, 180, 0.35);
+            clip-path: polygon(var(--shape));
+            opacity: 0;
+            transform: translate(var(--start-x), var(--start-y)) rotate(var(--angle)) scale(0.98);
+            transform-origin: var(--origin-x) var(--origin-y);
+            pointer-events: none;
+            z-index: 5;
+            animation: screenShardBreak 1.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            backdrop-filter: blur(10px) brightness(1.2);
+        }
+
+        .intro-screen-shard::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(var(--shine-angle), transparent 24%, rgba(255, 255, 255, 0.55), transparent 48%),
+                radial-gradient(circle at var(--origin-x) var(--origin-y), rgba(255, 255, 255, 0.42), transparent 34%);
+            opacity: 0.55;
+        }
+
+        .intro-screen-shard::after {
+            content: "";
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            clip-path: polygon(var(--inner-shape));
+            opacity: 0.65;
+        }
+
+        .intro-impact-hole {
+            position: absolute;
+            left: var(--x);
+            top: var(--y);
+            width: var(--size);
+            height: var(--size);
+            background:
+                radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 1) 0 28%, rgba(18, 2, 14, 0.98) 42%, rgba(255, 255, 255, 0.75) 45%, rgba(255, 105, 180, 0.45) 53%, transparent 65%),
+                conic-gradient(from 12deg, transparent, rgba(255, 255, 255, 0.35), transparent, rgba(255, 105, 180, 0.3), transparent);
+            clip-path: polygon(48% 0%, 58% 18%, 76% 7%, 73% 31%, 100% 40%, 78% 55%, 94% 78%, 67% 72%, 56% 100%, 43% 76%, 17% 93%, 24% 63%, 0% 52%, 23% 38%, 8% 15%, 35% 24%);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.08) rotate(-12deg);
+            pointer-events: none;
+            z-index: 10;
+            box-shadow:
+                0 0 18px rgba(255, 255, 255, 0.9),
+                0 0 44px rgba(255, 105, 180, 0.65),
+                inset 0 0 34px rgba(0, 0, 0, 0.95);
+            animation: impactHoleOpen 1.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .intro-impact-hole::before,
+        .intro-impact-hole::after {
+            content: "";
+            position: absolute;
+            inset: 11%;
+            border: 2px solid rgba(255, 255, 255, 0.68);
+            clip-path: polygon(52% 0%, 62% 20%, 84% 13%, 76% 36%, 100% 48%, 76% 58%, 88% 84%, 62% 76%, 50% 100%, 38% 75%, 12% 88%, 24% 60%, 0% 48%, 24% 36%, 12% 12%, 38% 23%);
+            opacity: 0.8;
+            filter: drop-shadow(0 0 7px rgba(255, 182, 193, 0.85));
+        }
+
+        .intro-impact-hole::after {
+            inset: 25%;
+            border-color: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.86);
+            opacity: 0.95;
         }
 
         @keyframes expand {
             0%, 100% { transform: scaleX(0.3); opacity: 0.4; }
             50% { transform: scaleX(1); opacity: 1; }
+        }
+
+        @keyframes introScan {
+            from { transform: translateY(-12%); }
+            to { transform: translateY(12%); }
+        }
+
+        @keyframes introScanBreak {
+            0% { transform: translate(-2%, -12%) skewX(0deg); opacity: 0.4; }
+            20% { transform: translate(3%, -6%) skewX(8deg); opacity: 0.85; }
+            45% { transform: translate(-5%, 0) skewX(-10deg); opacity: 0.7; }
+            70% { transform: translate(4%, 8%) skewX(6deg); opacity: 0.55; }
+            100% { transform: translateY(14%) scaleY(1.4); opacity: 0; }
+        }
+
+        @keyframes introShockwave {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            12% { opacity: 1; }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(4.8); }
+        }
+
+        @keyframes deadEndGlitch {
+            0% { transform: translate(0, 0) scale(1); filter: brightness(1); letter-spacing: 6px; }
+            18% { transform: translate(-4px, 2px) scale(1.03); filter: brightness(1.8); letter-spacing: 8px; }
+            34% { transform: translate(5px, -1px) scale(0.98); filter: brightness(1.25); }
+            52% { transform: translate(-2px, 0) scale(1.08); filter: brightness(2.2); letter-spacing: 10px; }
+            74% { transform: translate(0, 0) scale(1); filter: brightness(1.4); opacity: 1; }
+            100% { transform: translateY(-18px) scale(0.92); filter: blur(2px) brightness(2.4); opacity: 0; letter-spacing: 14px; }
+        }
+
+        @keyframes glitchSliceTop {
+            0%, 100% { opacity: 0; transform: translate(0, 0); }
+            25% { opacity: 0.95; transform: translate(-12px, -2px); }
+            50% { opacity: 0.75; transform: translate(9px, 1px); }
+            75% { opacity: 0.9; transform: translate(-4px, 0); }
+        }
+
+        @keyframes glitchSliceBottom {
+            0%, 100% { opacity: 0; transform: translate(0, 0); }
+            25% { opacity: 0.9; transform: translate(10px, 2px); }
+            50% { opacity: 0.75; transform: translate(-8px, -1px); }
+            75% { opacity: 0.9; transform: translate(5px, 0); }
+        }
+
+        @keyframes barOverload {
+            0% { transform: scaleX(1); opacity: 1; }
+            40% { transform: scaleX(3); opacity: 1; box-shadow: 0 0 22px var(--primary-pink); }
+            100% { transform: scaleX(18); opacity: 0; box-shadow: 0 0 50px var(--primary-pink); }
+        }
+
+        @keyframes fragmentScatter {
+            to {
+                opacity: 0;
+                filter: blur(1px);
+                transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(calc(var(--angle) + 210deg));
+            }
+        }
+
+        @keyframes crackDraw {
+            0% {
+                opacity: 0;
+                transform: rotate(var(--angle)) scaleX(0);
+                filter: brightness(1);
+            }
+            20% {
+                opacity: 1;
+                transform: rotate(var(--angle)) scaleX(1);
+                filter: brightness(2.2);
+            }
+            82% {
+                opacity: 0.95;
+                transform: rotate(var(--angle)) scaleX(1);
+                filter: brightness(1.35);
+            }
+            100% {
+                opacity: 0.35;
+                transform: rotate(var(--angle)) scaleX(1);
+                filter: brightness(1.1);
+            }
+        }
+
+        @keyframes glassShardBreak {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) rotate(var(--angle)) scale(0.2);
+                filter: brightness(2);
+            }
+            14% {
+                opacity: 0.92;
+                transform: translate(calc(-50% + var(--dx-small)), calc(-50% + var(--dy-small))) rotate(var(--angle)) scale(1);
+            }
+            100% {
+                opacity: 0;
+                filter: blur(1.5px) brightness(1.25);
+                transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 80px)) rotate(calc(var(--angle) + var(--spin))) scale(0.72);
+            }
+        }
+
+        @keyframes screenShardBreak {
+            0% {
+                opacity: 0;
+                filter: blur(1px) brightness(1.7);
+                transform: translate(var(--start-x), var(--start-y)) rotate(var(--angle)) scale(0.98);
+            }
+            10% {
+                opacity: 0.92;
+                filter: blur(0) brightness(1.55);
+                transform: translate(var(--start-x), var(--start-y)) rotate(var(--angle)) scale(1.02);
+            }
+            46% {
+                opacity: 0.86;
+                filter: blur(0) brightness(1.18);
+            }
+            100% {
+                opacity: 0;
+                filter: blur(2px) brightness(1.12);
+                transform: translate(var(--dx), var(--dy)) rotate(calc(var(--angle) + var(--spin))) scale(0.86);
+            }
+        }
+
+        @keyframes impactHoleOpen {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.08) rotate(-12deg);
+                filter: brightness(2);
+            }
+            9% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.16) rotate(4deg);
+                filter: brightness(2.6);
+            }
+            70% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                filter: brightness(1.15);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.32) rotate(10deg);
+                filter: brightness(0.8) blur(1px);
+            }
+        }
+
+        @keyframes introVanish {
+            0% { opacity: 1; backdrop-filter: blur(10px); }
+            72% { opacity: 1; backdrop-filter: blur(14px); }
+            100% { opacity: 0; backdrop-filter: blur(0); visibility: hidden; }
         }
 
         .background-container {
@@ -203,7 +594,6 @@
             white-space: nowrap;
         }
 
-        /* Titel als Link formatiert */
         .player-title {
             font-size: 0.75rem;
             font-weight: bold;
@@ -218,7 +608,6 @@
             transition: color 0.3s ease, text-shadow 0.3s ease;
         }
 
-        /* Leucht-Effekt beim Hovern über den Titel */
         .player-title:hover {
             color: var(--primary-pink);
             text-shadow: 0 0 8px var(--primary-pink);
@@ -322,8 +711,11 @@
         }
 
         .profile-card.active {
-            transform: translateY(0);
+            transform: translateY(0) perspective(1000px) rotateX(0deg) rotateY(0deg);
             opacity: 1;
+            /* Opacity blendet weich ein, Transform (für die Maus) reagiert schnell */
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s ease-out;
+            transform-style: preserve-3d;
         }
 
         .nier-tabs {
@@ -873,8 +1265,8 @@
 
     <img src="assets/Background/YouFoundMe.png" alt="Easter Egg" style="display: none;">
 
-    <div id="intro-overlay" onclick="enterSite()">
-        <div id="intro-text">DEAD END / CLICK TO ENTER</div>
+    <div id="intro-overlay" onclick="enterSite(event)">
+        <div id="intro-text" data-text="DEAD END / CLICK TO ENTER">DEAD END / CLICK TO ENTER</div>
         <div class="nier-bar"></div>
     </div>
 
@@ -1081,7 +1473,7 @@
                             <svg viewBox="0 0 24 24"><path d="M2 9.512l3.435-1.393L10.323 15.6l-2.073.916zm11.751-4.823l-3.326 1.637L15.344 18l1.921-1.196zm4.845-2.148l-2.703 2.126L21.378 19.5l1.411-1.464zM4.17 19.344L1 18.066l1.246-3.037 3.034 1.228zm6.544 3.04l-2.91-1.127.886-3.003 3.008 1.109zm7.042 1.258l-2.973-.787.525-3.045 3.035.748z"/></svg>
                             Riot Games
                         </span>
-                        <span class="socials-uid">ttvIAsukaaI#ASU02</span>
+                        <span class="socials-uid">IAsukaaI#ASU02</span>
                     </div>
                     <div class="socials-item">
                        <span class="socials-platform">
@@ -1366,7 +1758,6 @@
                 </div>
             </div>
 
-            <!-- NEUER DISCORD SERVER TAB CONTENT -->
             <div id="discord-tab" class="tab-content">
                 <h2 class="socials-headline">Mirai Nikki Fan Server</h2>
                 <div class="bio-text" style="text-align: left; margin-bottom: 20px;">
@@ -1426,6 +1817,8 @@
         const progressBar = document.getElementById('progressBar');
         const playerTitle = document.getElementById('playerTitle');
         const playerCover = document.getElementById('playerCover');
+        let introStarted = false;
+        let glassAudioContext = null;
         
         const playlist = [
             {
@@ -1483,13 +1876,266 @@
         setInterval(updateLocalTime, 1000);
         updateLocalTime();
 
-        function enterSite() {
-            introOverlay.style.opacity = '0';
-            introOverlay.style.pointerEvents = 'none';
+        function playGlassBreakSound() {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+
+            if (!glassAudioContext) {
+                glassAudioContext = new AudioContext();
+            }
+
+            const audioCtx = glassAudioContext;
+            const now = audioCtx.currentTime;
+
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const masterGain = audioCtx.createGain();
+            masterGain.gain.setValueAtTime(0.0001, now);
+            masterGain.gain.exponentialRampToValueAtTime(0.85, now + 0.012);
+            masterGain.gain.exponentialRampToValueAtTime(0.001, now + 1.15);
+            masterGain.connect(audioCtx.destination);
+
+            function makeNoiseBurst(startOffset, duration, filterType, frequency, q, volume) {
+                const sampleCount = Math.max(1, Math.floor(audioCtx.sampleRate * duration));
+                const buffer = audioCtx.createBuffer(1, sampleCount, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < sampleCount; i++) {
+                    const progress = i / sampleCount;
+                    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - progress, 2.8);
+                }
+
+                const source = audioCtx.createBufferSource();
+                const filter = audioCtx.createBiquadFilter();
+                const gain = audioCtx.createGain();
+
+                source.buffer = buffer;
+                filter.type = filterType;
+                filter.frequency.setValueAtTime(frequency, now + startOffset);
+                filter.Q.setValueAtTime(q, now + startOffset);
+
+                gain.gain.setValueAtTime(volume, now + startOffset);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + startOffset + duration);
+
+                source.connect(filter);
+                filter.connect(gain);
+                gain.connect(masterGain);
+                source.start(now + startOffset);
+                source.stop(now + startOffset + duration);
+            }
+
+            function makeGlassPing(startOffset, frequency, volume, duration, panValue) {
+                const oscillator = audioCtx.createOscillator();
+                const filter = audioCtx.createBiquadFilter();
+                const gain = audioCtx.createGain();
+                const panner = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
+
+                oscillator.type = Math.random() > 0.45 ? 'triangle' : 'sine';
+                oscillator.frequency.setValueAtTime(frequency, now + startOffset);
+                oscillator.detune.setValueAtTime((Math.random() - 0.5) * 28, now + startOffset);
+
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(frequency, now + startOffset);
+                filter.Q.setValueAtTime(7 + Math.random() * 8, now + startOffset);
+
+                gain.gain.setValueAtTime(0.0001, now + startOffset);
+                gain.gain.exponentialRampToValueAtTime(volume, now + startOffset + 0.006);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + startOffset + duration);
+
+                oscillator.connect(filter);
+                filter.connect(gain);
+
+                if (panner) {
+                    panner.pan.setValueAtTime(panValue, now + startOffset);
+                    gain.connect(panner);
+                    panner.connect(masterGain);
+                } else {
+                    gain.connect(masterGain);
+                }
+
+                oscillator.start(now + startOffset);
+                oscillator.stop(now + startOffset + duration + 0.03);
+            }
+
+            makeNoiseBurst(0, 0.12, 'highpass', 1700, 0.9, 0.85);
+            makeNoiseBurst(0.025, 0.26, 'bandpass', 4600, 1.8, 0.32);
+            makeNoiseBurst(0.09, 0.38, 'highpass', 7600, 0.7, 0.2);
+
+            [980, 1270, 1610, 2140, 2890, 3760, 5120, 6900].forEach((frequency, index) => {
+                makeGlassPing(
+                    index * 0.012,
+                    frequency + Math.random() * 180,
+                    0.12 - index * 0.009,
+                    0.16 + Math.random() * 0.18,
+                    -0.8 + Math.random() * 1.6
+                );
+            });
+
+            for (let i = 0; i < 14; i++) {
+                makeGlassPing(
+                    0.16 + Math.random() * 0.58,
+                    1900 + Math.random() * 6400,
+                    0.035 + Math.random() * 0.045,
+                    0.08 + Math.random() * 0.22,
+                    -1 + Math.random() * 2
+                );
+            }
+        }
+
+        function createIntroBurst(event) {
+            const rect = introOverlay.getBoundingClientRect();
+            const x = event ? event.clientX - rect.left : rect.width / 2;
+            const y = event ? event.clientY - rect.top : rect.height / 2;
+            const shardShapes = [
+                '50% 0%, 100% 100%, 0% 72%',
+                '12% 0%, 100% 20%, 70% 100%, 0% 74%',
+                '0% 18%, 84% 0%, 100% 82%, 18% 100%',
+                '46% 0%, 100% 48%, 62% 100%, 0% 82%, 12% 20%'
+            ];
+            const screenShards = [
+                { left: -0.08, top: -0.10, w: 0.44, h: 0.44, shape: '0% 0%, 100% 0%, 76% 100%, 0% 78%' },
+                { left: 0.23, top: -0.08, w: 0.46, h: 0.38, shape: '0% 0%, 100% 0%, 82% 92%, 24% 100%' },
+                { left: 0.58, top: -0.10, w: 0.50, h: 0.45, shape: '14% 0%, 100% 0%, 100% 82%, 0% 100%' },
+                { left: -0.10, top: 0.24, w: 0.42, h: 0.48, shape: '0% 0%, 82% 14%, 100% 88%, 0% 100%' },
+                { left: 0.22, top: 0.22, w: 0.58, h: 0.56, shape: '8% 0%, 88% 8%, 100% 64%, 62% 100%, 0% 84%' },
+                { left: 0.68, top: 0.23, w: 0.43, h: 0.50, shape: '0% 10%, 100% 0%, 100% 100%, 18% 86%' },
+                { left: -0.08, top: 0.62, w: 0.48, h: 0.48, shape: '0% 0%, 70% 10%, 100% 100%, 0% 100%' },
+                { left: 0.31, top: 0.58, w: 0.42, h: 0.52, shape: '10% 0%, 100% 16%, 84% 100%, 0% 92%' },
+                { left: 0.62, top: 0.60, w: 0.48, h: 0.50, shape: '0% 0%, 100% 10%, 100% 100%, 22% 100%' }
+            ];
+
+            introOverlay.style.setProperty('--click-x', `${x}px`);
+            introOverlay.style.setProperty('--click-y', `${y}px`);
+
+            screenShards.forEach((piece, index) => {
+                const shard = document.createElement('span');
+                const left = rect.width * piece.left;
+                const top = rect.height * piece.top;
+                const width = rect.width * piece.w;
+                const height = rect.height * piece.h;
+                const centerX = left + width / 2;
+                const centerY = top + height / 2;
+                const vectorX = centerX - x;
+                const vectorY = centerY - y;
+                const magnitude = Math.max(1, Math.hypot(vectorX, vectorY));
+                const directionX = vectorX / magnitude;
+                const directionY = vectorY / magnitude;
+                const distance = 260 + Math.random() * 260;
+                const originX = Math.max(0, Math.min(100, ((x - left) / width) * 100));
+                const originY = Math.max(0, Math.min(100, ((y - top) / height) * 100));
+
+                shard.className = 'intro-screen-shard';
+                shard.style.setProperty('--left', `${left}px`);
+                shard.style.setProperty('--top', `${top}px`);
+                shard.style.setProperty('--w', `${width}px`);
+                shard.style.setProperty('--h', `${height}px`);
+                shard.style.setProperty('--shape', piece.shape);
+                shard.style.setProperty('--inner-shape', piece.shape);
+                shard.style.setProperty('--origin-x', `${originX}%`);
+                shard.style.setProperty('--origin-y', `${originY}%`);
+                shard.style.setProperty('--shine-angle', `${25 + index * 17}deg`);
+                shard.style.setProperty('--start-x', `${-directionX * 18}px`);
+                shard.style.setProperty('--start-y', `${-directionY * 18}px`);
+                shard.style.setProperty('--dx', `${directionX * distance}px`);
+                shard.style.setProperty('--dy', `${directionY * distance + 70}px`);
+                shard.style.setProperty('--angle', `${(Math.random() - 0.5) * 8}deg`);
+                shard.style.setProperty('--spin', `${(Math.random() > 0.5 ? 1 : -1) * (12 + Math.random() * 24)}deg`);
+                shard.style.animationDelay = `${index * 0.018}s`;
+
+                introOverlay.appendChild(shard);
+                setTimeout(() => shard.remove(), 1350);
+            });
+
+            for (let i = 0; i < 22; i++) {
+                const crack = document.createElement('span');
+                const angle = (360 / 22) * i + (Math.random() - 0.5) * 28;
+                const length = 180 + Math.random() * Math.max(rect.width, rect.height) * 0.55;
+                const offset = Math.random() * 18;
+                const radians = angle * Math.PI / 180;
+
+                crack.className = 'intro-crack';
+                crack.style.setProperty('--x', `${x + Math.cos(radians) * offset}px`);
+                crack.style.setProperty('--y', `${y + Math.sin(radians) * offset}px`);
+                crack.style.setProperty('--length', `${length}px`);
+                crack.style.setProperty('--angle', `${angle}deg`);
+                crack.style.setProperty('--branch-length', `${34 + Math.random() * 96}px`);
+                crack.style.setProperty('--branch-angle', `${(Math.random() > 0.5 ? 1 : -1) * (22 + Math.random() * 34)}deg`);
+                crack.style.animationDelay = `${Math.random() * 0.08}s`;
+
+                introOverlay.appendChild(crack);
+                setTimeout(() => crack.remove(), 900);
+            }
+
+            for (let i = 0; i < 18; i++) {
+                const shard = document.createElement('span');
+                const angle = Math.random() * 360;
+                const distance = 180 + Math.random() * 560;
+                const radians = angle * Math.PI / 180;
+                const dx = Math.cos(radians) * distance;
+                const dy = Math.sin(radians) * distance;
+
+                shard.className = 'intro-glass-shard';
+                shard.style.setProperty('--x', `${x}px`);
+                shard.style.setProperty('--y', `${y}px`);
+                shard.style.setProperty('--size', `${70 + Math.random() * 150}px`);
+                shard.style.setProperty('--shape', shardShapes[Math.floor(Math.random() * shardShapes.length)]);
+                shard.style.setProperty('--angle', `${angle + Math.random() * 80}deg`);
+                shard.style.setProperty('--dx', `${dx}px`);
+                shard.style.setProperty('--dy', `${dy}px`);
+                shard.style.setProperty('--dx-small', `${dx * 0.08}px`);
+                shard.style.setProperty('--dy-small', `${dy * 0.08}px`);
+                shard.style.setProperty('--spin', `${(Math.random() > 0.5 ? 1 : -1) * (160 + Math.random() * 260)}deg`);
+                shard.style.animationDelay = `${Math.random() * 0.12}s`;
+
+                introOverlay.appendChild(shard);
+                setTimeout(() => shard.remove(), 1250);
+            }
+
+            for (let i = 0; i < 26; i++) {
+                const fragment = document.createElement('span');
+                const angle = Math.random() * 360;
+                const distance = 90 + Math.random() * 340;
+                const drift = (Math.random() - 0.5) * 80;
+                const radians = angle * Math.PI / 180;
+
+                fragment.className = 'intro-fragment';
+                fragment.style.setProperty('--x', `${x}px`);
+                fragment.style.setProperty('--y', `${y}px`);
+                fragment.style.setProperty('--w', `${18 + Math.random() * 56}px`);
+                fragment.style.setProperty('--angle', `${angle}deg`);
+                fragment.style.setProperty('--dx', `${Math.cos(radians) * distance}px`);
+                fragment.style.setProperty('--dy', `${Math.sin(radians) * distance + drift}px`);
+                fragment.style.animationDelay = `${Math.random() * 0.12}s`;
+
+                introOverlay.appendChild(fragment);
+                setTimeout(() => fragment.remove(), 1100);
+            }
+        }
+
+        function enterSite(event) {
+            if (introStarted) return;
+            introStarted = true;
+
+            const introText = document.getElementById('intro-text');
+            if (introText) {
+                introText.innerText = 'DEAD END ACCEPTED';
+                introText.dataset.text = 'DEAD END ACCEPTED';
+            }
+
+            createIntroBurst(event);
+            playGlassBreakSound();
+            introOverlay.classList.add('entering');
+
+            setTimeout(() => {
+                profileCard.classList.add('active');
+            }, 900);
+
             setTimeout(() => {
                 introOverlay.remove();
-                profileCard.classList.add('active');
-            }, 600);
+            }, 1350);
+
             try { 
                 bgVideo.play(); 
                 bgAudio.play().then(() => {
@@ -1650,6 +2296,27 @@
             if(codingExpEl) codingExpEl.innerText = expYears + " Years";
         }
         updateLiveStats();
+
+        document.addEventListener('mousemove', (e) => {
+            if (!profileCard.classList.contains('active')) return;
+
+            const xAxis = (e.pageX - window.innerWidth / 2) / 100; 
+            const yAxis = (e.pageY - window.innerHeight / 2) / 100;
+
+            profileCard.style.transform = `translateY(0) perspective(1000px) rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            if (profileCard.classList.contains('active')) {
+                profileCard.style.transition = 'transform 0.5s ease-out';
+                profileCard.style.transform = `translateY(0) perspective(1000px) rotateY(0deg) rotateX(0deg)`;
+        
+                setTimeout(() => {
+                    profileCard.style.transition = 'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s ease-out';
+                }, 500);
+            }
+        });
+
     </script>
 </body>
 </html>
