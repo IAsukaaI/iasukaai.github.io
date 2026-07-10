@@ -604,7 +604,7 @@
             display: inline-block;
             padding-left: 100%;
             animation: marquee 14s linear infinite;
-            text-decoration: none; /* Entfernt den Standard-Unterstrich */
+            text-decoration: none; 
             transition: color 0.3s ease, text-shadow 0.3s ease;
         }
 
@@ -713,7 +713,6 @@
         .profile-card.active {
             transform: translateY(0) perspective(1000px) rotateX(0deg) rotateY(0deg);
             opacity: 1;
-            /* Opacity blendet weich ein, Transform (für die Maus) reagiert schnell */
             transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s ease-out;
             transform-style: preserve-3d;
         }
@@ -1259,11 +1258,140 @@
 
         .contact-item { cursor: pointer; text-decoration: none; color: inherit; }
 
+        #clippy-container {
+            position: fixed;
+            bottom: 60px;
+            left: 20px;
+            z-index: 9000;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        #clippy-img {
+            width: 70px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.4));
+            transition: transform 0.3s ease, filter 0.3s ease;
+            animation: clippyFloat 4s ease-in-out infinite;
+        }
+        #clippy-img:hover {
+            transform: scale(1.15) rotate(5deg);
+            filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.8));
+        }
+        #clippy-speech {
+            background: var(--card-glass);
+            border: 1px solid var(--primary-pink);
+            border-radius: 12px;
+            padding: 12px 18px;
+            max-width: 220px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--text-main);
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.3);
+            backdrop-filter: blur(10px);
+            opacity: 1;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            position: relative;
+            transform: translateY(0);
+        }
+        #clippy-speech.hidden {
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+        }
+        #clippy-speech::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -12px;
+            border-width: 8px 12px 8px 0;
+            border-style: solid;
+            border-color: transparent var(--primary-pink) transparent transparent;
+        }
+        @keyframes clippyFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .zoomable {
+            transition: transform 0.3s ease, z-index 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .zoomable.is-zoomed {
+            transform: scale(1.5);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        #media-zoom-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 5, 10, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 30000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #media-zoom-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #media-zoom-content {
+            width: 600px;        
+            height: 400px;        
+            object-fit: contain;  
+    
+            max-width: 90vw;      
+            max-height: 80vh;
+    
+            border: 2px solid var(--primary-pink);
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #media-zoom-overlay.active #media-zoom-content {
+            transform: scale(1);
+        }
+
+        .breakroom-close-btn {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: var(--primary-pink);
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, color 0.3s ease;
+            z-index: 30001;
+        }
+
+        .breakroom-close-btn:hover {
+            transform: scale(1.2);
+            color: #fff;
+        }
+
+        .media-item {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .media-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
+        }
+
     </style>
 </head>
 <body>
-
-    <img src="assets/Background/YouFoundMe.png" alt="Easter Egg" style="display: none;">
 
     <div id="intro-overlay" onclick="enterSite(event)">
         <div id="intro-text" data-text="DEAD END / CLICK TO ENTER">DEAD END / CLICK TO ENTER</div>
@@ -1329,6 +1457,7 @@
                 <button class="tab-btn" onclick="switchTab('achievements', this)">Achievements</button>
                 <button class="tab-btn" onclick="switchTab('contact', this)">Contact</button>
                 <button class="tab-btn" onclick="switchTab('discord', this)">Discord Server</button>
+                <button class="tab-btn" onclick="switchTab('breakroom', this)">Break Room</button>
             </div>
 
             <div id="profile-tab" class="tab-content active">
@@ -1662,7 +1791,7 @@
                         </div>
                     </div>
 
-                                        <div style="border-bottom: 1px dashed rgba(78, 75, 66, 0.4); margin: 2px 0;"></div>
+                    <div style="border-bottom: 1px dashed rgba(78, 75, 66, 0.4); margin: 2px 0;"></div>
 
                     <div>
                         <div class="activity-type" style="text-align: left; margin-bottom: 6px;">Other Projects I did:</div>
@@ -1778,6 +1907,34 @@
                 </div>
             </div>
 
+            <div id="breakroom-tab" class="tab-content">
+                <h2 class="socials-headline">Break Room (Password Required)</h2>
+                
+                <div id="breakroom-login" style="text-align: center; margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                    <div style="font-size: 0.95rem; color: var(--text-main); font-weight: bold;">
+                        If You just would have the Password... Surely it is somewhere on this Website... Maybe Clippy knows where to look...
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <input type="password" id="breakroom-pwd" placeholder="Password..." onkeydown="if(event.key === 'Enter') checkBreakRoomPwd()" style="background: var(--item-glass); border: 1px solid var(--primary-pink); color: #fff; padding: 10px 15px; border-radius: var(--radius-sm); outline: none; font-family: monospace;">
+                        <button class="nsfw-btn" onclick="checkBreakRoomPwd()" style="padding: 10px 20px;">Login</button>
+                    </div>
+                    <div id="breakroom-error" style="color: #ff3366; font-weight: bold; font-size: 0.85rem; display: none; text-shadow: 0 0 5px rgba(255, 51, 102, 0.5);">
+                        Access Denied. Incorrect Password.
+                    </div>
+                </div>
+            
+        <div id="breakroom-content" style="display: none; text-align: center;">
+            <h3 style="color: var(--primary-light); margin-bottom: 20px; font-style: italic;">"You found the Yuno Shrine (Text me Yuno on Top if you found it ;3)"</h3>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; max-height: 280px; overflow-y: auto; padding-right: 5px;">
+                <video src="assets/Break Room/Edit1.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                <video src="assets/Break Room/Edit2.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                <video src="assets/Break Room/Edit3.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                <video src="assets/Break Room/Edit4.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                <img src="assets/Break Room/Yuno.png" alt="You Found Me" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                <img src="assets/Break Room/YunoCar.png" alt="You Found Me" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+            </div>
+        </div>
+
             <div class="social-icons-row">
                 <a href="https://medal.tv/u/iasukaai" target="_blank" class="social-icon-btn" title="Medal.tv"><i class="fa-solid fa-video"></i></a>
                 <a href="https://steamcommunity.com/id/iasukaai" target="_blank" class="social-icon-btn" title="Steam"><i class="fab fa-steam"></i></a>
@@ -1803,8 +1960,20 @@
             </div>
         </div>
     </div>
+
+    <div id="clippy-container">
+        <img id="clippy-img" src="assets/Clippy/clippy.png" alt="Clippy" onclick="triggerClippy()">
+        <div id="clippy-speech" class="hidden">
+            <p id="clippy-text"></p>
+        </div>
+    </div>
   
     <div class="copyright-disclaimer">© 2026 ASUKAA // Asukaa's Diary — ALL RIGHTS RESERVED</div>
+
+    <div id="media-zoom-overlay" onclick="closeMediaZoom(event)">
+        <i class="fa-solid fa-xmark breakroom-close-btn" onclick="closeMediaZoom(event)"></i>
+        <div id="media-zoom-container" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;"></div>
+    </div>
 
     <script>
         const bgVideo = document.getElementById('bgVideo');
@@ -2316,6 +2485,116 @@
                 }, 500);
             }
         });
+
+        function checkBreakRoomPwd() {
+            const pwdInput = document.getElementById('breakroom-pwd');
+            const errorEl = document.getElementById('breakroom-error');
+            
+            if(pwdInput.value === 'Yuno') {
+                document.getElementById('breakroom-login').style.display = 'none';
+                
+                const content = document.getElementById('breakroom-content');
+                content.style.display = 'block';
+                content.style.animation = 'fadeIn 0.6s ease';
+                
+                errorEl.style.display = 'none';
+                pwdInput.value = ''; 
+            } else {
+                errorEl.style.display = 'block';
+                errorEl.style.animation = 'none';
+                setTimeout(() => errorEl.style.animation = 'glitchSliceTop 0.3s steps(2, end) 2', 10);
+            }
+        }
+
+        const clippyLines = [
+            "Did you know this Website was first planned to be a Guns.lol ripoff?",
+            "Did You know this Websites has over 2600 lines of Code?",
+            "Did you know that Mirai Nikki, Evangelion and Black Lagoon are my Fav Shows?",
+            "Always when I need a Break I think of 'Yuno'"
+        ];
+
+        const clippySpeech = document.getElementById('clippy-speech');
+        const clippyText = document.getElementById('clippy-text');
+        let clippyTimeout;
+        let lastClippyIndex = -1;
+
+        function triggerClippy() {
+            let randomIndex;
+            
+            do {
+                randomIndex = Math.floor(Math.random() * clippyLines.length);
+            } while (randomIndex === lastClippyIndex && clippyLines.length > 1);
+            
+            lastClippyIndex = randomIndex;
+            clippyText.innerText = clippyLines[randomIndex];
+            
+            clippySpeech.classList.remove('hidden');
+            
+            clearTimeout(clippyTimeout);
+            
+            clippyTimeout = setTimeout(() => {
+                clippySpeech.classList.add('hidden');
+            }, 7000);
+        }
+
+        setInterval(() => {
+            if(Math.random() > 0.6 && profileCard.classList.contains('active')) {
+                triggerClippy();
+            }
+        }, 25000);
+
+        setTimeout(() => {
+            if (profileCard.classList.contains('active')) {
+                triggerClippy();
+            }
+        }, 6000);
+
+        function openMediaZoom(element) {
+            const overlay = document.getElementById('media-zoom-overlay');
+            const container = document.getElementById('media-zoom-container');
+    
+            container.innerHTML = '';
+    
+            const clone = element.cloneNode(true);
+            clone.id = 'media-zoom-content';
+            clone.style.width = 'auto';
+            clone.style.height = 'auto';
+            clone.removeAttribute('onclick'); 
+            clone.classList.remove('media-item');
+    
+            if (clone.tagName.toLowerCase() === 'video') {
+                clone.controls = true;
+                clone.muted = false; 
+                clone.play();
+        
+                if (typeof bgAudio !== 'undefined') {
+                    bgAudio.pause();
+                } else if (typeof audio !== 'undefined') {
+                    audio.pause();
+                }
+            }
+    
+            container.appendChild(clone);
+            overlay.classList.add('active');
+        }
+
+        function closeMediaZoom(event) {
+            if (event && event.target.id === 'media-zoom-content') return;
+
+            const overlay = document.getElementById('media-zoom-overlay');
+            const container = document.getElementById('media-zoom-container');
+            overlay.classList.remove('active');
+    
+            if (typeof bgAudio !== 'undefined') {
+                bgAudio.play();
+            } else if (typeof audio !== 'undefined') {
+                audio.play();
+            }
+    
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 300);
+        }
 
     </script>
 </body>
