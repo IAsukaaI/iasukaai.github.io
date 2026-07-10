@@ -1389,6 +1389,105 @@
             box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
         }
 
+        /* --- FOLDER STYLES --- */
+        .folder-grid {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .folder-item {
+            background: var(--item-glass);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 25px 20px;
+            width: 140px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-main);
+        }
+
+        .folder-item i {
+            font-size: 3.5rem;
+            color: var(--primary-pink);
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .folder-item:hover {
+            background: rgba(255, 105, 180, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        .folder-item:hover i {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 10px var(--primary-pink));
+        }
+
+        .folder-label {
+            font-weight: bold;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .folder-content-container {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .folder-title {
+            color: var(--primary-pink);
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .folder-back-btn {
+            background: var(--item-glass);
+            border: 1px solid var(--primary-pink);
+            color: var(--text-main);
+            padding: 8px 15px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .folder-back-btn:hover {
+            background: var(--primary-pink);
+            color: #fff;
+            box-shadow: 0 0 15px var(--primary-pink);
+        }
+
+        .folder-media-grid {
+            display: flex; 
+            gap: 15px; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+            max-height: 280px; 
+            overflow-y: auto; 
+            padding-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -1399,7 +1498,8 @@
     </div>
 
     <video id="bgVideo" class="background-container" loop playsinline muted>
-        <source src="https://files.catbox.moe/zc9nzd.mp4" type="video/mp4">
+        <source src="assets/Background/background.mp4" type="video/mp4">
+        Your Browser doesnt Support Video
     </video>
     
     <audio id="bgAudio"></audio>
@@ -1495,7 +1595,7 @@
                 <div class="socials-list">
                     <div class="socials-item">
                         <span class="socials-platform"><i class="fa-solid fa-heart-pulse"></i> Years Alive</span>
-                        <span class="socials-uid live-value" id="years-alive-counter">0</span>
+                        <span class="socials-uid live-value" id="years-alive-counter">19</span>
                     </div>
                     <div class="socials-item">
                         <span class="socials-platform"><i class="fa-solid fa-laptop-code"></i> Coding Experience</span>
@@ -1611,7 +1711,7 @@
                        <span class="socials-uid">ttvIAsuxaaI</span>
                    </div>
                     <div class="socials-item">
-                        <span class="socials-platform"><i class="fa-brands fa-xbox"></i> Xbox Live</span>
+                        <span class="socials-platform"><i class="brands fa-xbox"></i> Xbox Live</span>
                         <span class="socials-uid">I Asukaa I</span>
                     </div>
                     <div class="socials-item">
@@ -1912,7 +2012,7 @@
                 
                 <div id="breakroom-login" style="text-align: center; margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
                     <div style="font-size: 0.95rem; color: var(--text-main); font-weight: bold;">
-                        If You just would have the Password... Surely it is somewhere on this Website... Maybe Clippy knows where to look...
+                        If You just would have the Password... Surely it is somewhere on this Website... Maybe Clippy knows where to look... He is down Left if youre searching him right now!
                     </div>
                     <div style="display: flex; gap: 10px; justify-content: center;">
                         <input type="password" id="breakroom-pwd" placeholder="Password..." onkeydown="if(event.key === 'Enter') checkBreakRoomPwd()" style="background: var(--item-glass); border: 1px solid var(--primary-pink); color: #fff; padding: 10px 15px; border-radius: var(--radius-sm); outline: none; font-family: monospace;">
@@ -1923,17 +2023,119 @@
                     </div>
                 </div>
             
-        <div id="breakroom-content" style="display: none; text-align: center;">
-            <h3 style="color: var(--primary-light); margin-bottom: 20px; font-style: italic;">"You found the Yuno Shrine (Text me Yuno on Top if you found it ;3)"</h3>
-            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; max-height: 280px; overflow-y: auto; padding-right: 5px;">
-                <video src="assets/Break Room/Edit1.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
-                <video src="assets/Break Room/Edit2.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
-                <video src="assets/Break Room/Edit3.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
-                <video src="assets/Break Room/Edit4.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
-                <img src="assets/Break Room/Yuno.png" alt="You Found Me" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
-                <img src="assets/Break Room/YunoCar.png" alt="You Found Me" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                <div id="breakroom-content" style="display: none; text-align: center; width: 100%;">
+                    <h3 style="color: var(--primary-light); margin-bottom: 20px; font-style: italic;">"Hey Take a Break (Text me Yuno on Top if you found it ;3)"</h3>
+                    
+                    <div id="folders-view" class="folder-grid">
+                        <div class="folder-item" onclick="openFolder('edits')">
+                            <i class="fa-solid fa-folder"></i>
+                            <div class="folder-label">Yuno Edits</div>
+                        </div>
+                        <div class="folder-item" onclick="openFolder('pictures')">
+                            <i class="fa-solid fa-folder"></i>
+                            <div class="folder-label">Yuno Pictures</div>
+                        </div>
+                        <div class="folder-item" onclick="openFolder('setup')">
+                            <i class="fa-solid fa-computer"></i>
+                            <div class="folder-label">SetUp</div>
+                        </div>
+                        <div class="folder-item" onclick="openFolder('peak')">
+                            <i class="fa-solid fa-folder-plus"></i>
+                            <div class="folder-label">Peak Things</div>
+                        </div>
+                        <div class="folder-item" onclick="openFolder('tbk')">
+                            <i class="fa-solid fa-folder-plus"></i>
+                            <div class="folder-label">TBK Break</div>
+                        </div>
+                        <div class="folder-item" onclick="openFolder('openings')">
+                            <i class="fa-solid fa-folder-plus"></i>
+                            <div class="folder-label">Peak Openings</div>
+                        </div>
+                    </div>
+
+                    <div id="folder-edits" class="folder-content-container">
+                        <div class="folder-header">
+                            <div class="folder-title"><i class="fa-solid fa-folder-open"></i>Yuno Edits</div>
+                            <button class="folder-back-btn" onclick="closeFolder()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                        </div>
+                        <div class="folder-media-grid">
+                            <video src="assets/Break Room/Edits/Edit1.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                            <video src="assets/Break Room/Edits/Edit2.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                            <video src="assets/Break Room/Edits/Edit3.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                            <video src="assets/Break Room/Edits/Edit4.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                            <video src="assets/Break Room/Edits/Edit5.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                            <video src="assets/Break Room/Edits/Edit6.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                            <video src="assets/Break Room/Edits/Edit7.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                            <video src="assets/Break Room/Edits/Edit8.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        </div>
+                    </div>
+
+                    <div id="folder-pictures" class="folder-content-container">
+                        <div class="folder-header">
+                            <div class="folder-title"><i class="fa-solid fa-folder-open"></i>Yuno Pictures</div>
+                            <button class="folder-back-btn" onclick="closeFolder()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                        </div>
+                        <div class="folder-media-grid">
+                            <img src="assets/Break Room/Pictures/Yuno.png" alt="You Found Me" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                            <img src="assets/Break Room/Pictures/YunoCar.png" alt="You Found Me" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                            <img src="assets/Break Room/Pictures/LoveYuno.png" alt="You Found Me" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                            <img src="assets/Break Room/Pictures/PeakYuno.png" alt="You Found Me" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                        </div>
+                    </div>
+
+                    <div id="folder-setup" class="folder-content-container">
+                        <div class="folder-header">
+                            <div class="folder-title"><i class="fa-solid fa-folder-open"></i> SetUp</div>
+                            <button class="folder-back-btn" onclick="closeFolder()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                        </div>
+                        <div class="folder-media-grid">
+                            <img src="assets/Break Room/Setup/Setup1.png" alt="Setup Placeholder 1" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                            <img src="assets/Break Room/Setup/Setup2.png" alt="Setup Placeholder 2" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                            <img src="assets/Break Room/Setup/Setup3.png" alt="Setup Placeholder 3" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                            <img src="assets/Break Room/Setup/Setup4.png" alt="Setup Placeholder 4" class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)">
+                        </div>
+                    </div>
+
+                    <div id="folder-peak" class="folder-content-container">
+                        <div class="folder-header">
+                            <div class="folder-title"><i class="fa-solid fa-folder-open"></i>Peak Things</div>
+                            <button class="folder-back-btn" onclick="closeFolder()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                        </div>
+                        <div class="folder-media-grid">
+                        <video src="assets/Break Room/Peak/Peak1.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        <video src="assets/Break Room/Peak/Peak2.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        <video src="assets/Break Room/Peak/Peak3.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        <video src="assets/Break Room/Peak/Peak4.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        </div>
+                    </div>
+
+                    <div id="folder-tbk" class="folder-content-container">
+                        <div class="folder-header">
+                            <div class="folder-title"><i class="fa-solid fa-folder-open"></i>TIEFBASSKOMMANDO Break</div>
+                            <button class="folder-back-btn" onclick="closeFolder()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                        </div>
+                        <div class="folder-media-grid">
+                        <video src="assets/Break Room/TBK Break/TBK1.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        <video src="assets/Break Room/TBK Break/TBK2.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        <video src="assets/Break Room/TBK Break/TBK3.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        <video src="assets/Break Room/TBK Break/TBK4.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        </div>
+                    </div>
+                     
+                    <div id="folder-openings" class="folder-content-container">
+                        <div class="folder-header">
+                            <div class="folder-title"><i class="fa-solid fa-folder-open"></i>Peak Openings</div>
+                            <button class="folder-back-btn" onclick="closeFolder()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                        </div>
+                        <div class="folder-media-grid">
+                        <video src="assets/Break Room/OP/OP1.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        <video src="assets/Break Room/OP/OP2.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        <video src="assets/Break Room/OP/OP3.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        <video src="assets/Break Room/OP/OP4.mp4" loop muted playsinline class="media-item" style="border-radius: 12px; border: 2px solid var(--primary-pink); width: 220px; object-fit: cover;" onclick="openMediaZoom(this)"></video>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
             <div class="social-icons-row">
                 <a href="https://medal.tv/u/iasukaai" target="_blank" class="social-icon-btn" title="Medal.tv"><i class="fa-solid fa-video"></i></a>
@@ -1962,7 +2164,7 @@
     </div>
 
     <div id="clippy-container">
-        <img id="clippy-img" src="assets/Clippy/MC.png" alt="Clippy" onclick="triggerClippy()">
+        <img id="clippy-img" src="assets/Clippy/clippy.png" alt="Clippy" onclick="triggerClippy()">
         <div id="clippy-speech" class="hidden">
             <p id="clippy-text"></p>
         </div>
@@ -2450,17 +2652,11 @@
         setInterval(fetchDiscordStatus, 15000);
 
         function updateLiveStats() {
-            const birthDate = new Date('2007-06-25T00:00:00');
             const now = new Date();
-            const ageInMs = now - birthDate;
-            const ageInYears = Math.floor(ageInMs / (1000 * 60 * 60 * 24 * 365.25));
-            
-            const yearsAliveEl = document.getElementById('years-alive-counter');
-            if(yearsAliveEl) yearsAliveEl.innerText = ageInYears;
-
             const currentYear = now.getFullYear();
             let expYears = 2 + (currentYear - 2026);
             if (now.getMonth() >= 6) expYears += 1;
+            
             const codingExpEl = document.getElementById('coding-exp-counter');
             if(codingExpEl) codingExpEl.innerText = expYears + " Years";
         }
@@ -2508,7 +2704,7 @@
 
         const clippyLines = [
             "Did you know this Website was first planned to be a Guns.lol ripoff?",
-            "Did You know this Websites has over 2600 lines of Code?",
+            "Did You know this Websites has over 2800 lines of Code?",
             "Did you know that Mirai Nikki, Evangelion and Black Lagoon are my Fav Shows?",
             "Always when I need a Break I think of 'Yuno'"
         ];
@@ -2594,6 +2790,17 @@
             setTimeout(() => {
                 container.innerHTML = '';
             }, 300);
+        }
+
+        function openFolder(folderId) {
+            document.getElementById('folders-view').style.display = 'none';
+            document.querySelectorAll('.folder-content-container').forEach(el => el.style.display = 'none');
+            document.getElementById('folder-' + folderId).style.display = 'block';
+        }
+
+        function closeFolder() {
+            document.querySelectorAll('.folder-content-container').forEach(el => el.style.display = 'none');
+            document.getElementById('folders-view').style.display = 'flex';
         }
 
     </script>
